@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+._*
+
+# 本地数据与运行产物
+/data/raw/*
+!/data/raw/.gitkeep
+/data/processed/*
+!/data/processed/.gitkeep
+/outputs/*
+!/outputs/.gitkeep
+
+# 本地环境与缓存
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.Rhistory
+.RData
+.Rproj.user/
+.env
+.env.*
+!.env.example
