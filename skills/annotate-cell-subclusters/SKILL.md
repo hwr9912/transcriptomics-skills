@@ -33,6 +33,9 @@ description: "聚类、分群和细胞亚群注释"
    - 亚群编号默认以 `chosen_celltype + "_"` 为前缀，可按项目修改 `cluster_prefix`。
    - 默认依次计算 Harmony 和 scVI，保留两种整合结果。后续 `use_rep="X_pca_harmony"` 默认使用 Harmony；若效果不佳，只需改为 `use_rep="X_scVI"`，从邻接图计算开始重跑降维、聚类、差异分析、注释和可视化，无需重新计算整合。邻接图和 t-SNE 使用同一个 `use_rep`，UMAP 使用相应的邻接图。
 3. 逐步执行首次差异分析；在合并／删除亚群前，读取本次 `tag` 对应的差异表并结合聚类图判断是否需要调整。按证据填写 `merge_map` 和 `exclude_clusters`，默认均为空。若有调整，对修改后的 `adata` 重新差异分析；代码只清理本次标签的旧差异表，不清空目录。继续执行到 `### 选取marker基因` 前的 checkpoint 停止。
+   - 优先保证最终的细胞亚群总数维持在5-10群
+   - 允许marker基因在不同亚群之间部分重复
+   - 如果无法找到任何高表达的marker基因，考虑命名为unannotated
 4. 分析 `result/DEG_by_{chosen_celltype}_subcluster` 下本次 `tag` 对应、属于最终亚群的 top100 差异表，重点关注 names、logfoldchanges、pct_nz_group、pct_nz_reference 四列，推断细胞亚群，将推断过程输出到 `results/{chosen_celltype}/`。
 5. 根据注释结果完整替换 `genes` 和 `cluster2annotation`，执行 checkpoint 后的 marker 展示及注释保存代码，生成 `data/{config['project_code']}_{chosen_celltype}_annot.h5ad`。
 6. 将 [scripts/plot.ipynb](scripts/plot.ipynb) 添加到生物学注释代码之后，替换细胞类型、类别列表和 marker 列表。按顺序执行加载与绘图代码框，以刚生成的 `_annot.h5ad` 为输入完成可视化。
